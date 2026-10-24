@@ -1,0 +1,35 @@
+---
+import { site } from '../config/site';
+
+const image = '/images/portada.webp';
+---
+
+<section class="landing-hero" id="inicio" style={`--hero-image: url('${image}')`}>
+	<div class="landing-hero-shade"></div>
+	<div class="landing-hero-content">
+		<p class="eyebrow light"><span></span> POSADA EL NÓMADA · LA SERRANITA</p>
+		<h1>Tu parada<br />en el <em>camino.</em></h1>
+		<p class="landing-hero-copy">Un lugar para descansar, compartir historias y disfrutar las sierras. Llegues en moto o como quieras, acá te esperamos.</p>
+		<div class="hero-actions">
+			<a class="btn button-light" href={site.bookingUrl} target="_blank" rel="noreferrer">Encontrá tu lugar <span aria-hidden="true">↗</span></a>
+			<a class="text-link" href="#posada">Conocé la posada <span aria-hidden="true">↓</span></a>
+		</div>
+	</div>
+	<div class="landing-hero-note"><span class="note-line"></span> SIERRAS DE CÓRDOBA, ARGENTINA</div>
+	<div class="landing-hero-index" aria-hidden="true">01 <span>/</span> 03</div>
+</section>
+
+<style>
+	.landing-hero{min-height:570px;height:calc(88svh - 70px);max-height:850px;position:relative;display:flex;align-items:center;color:#fff;background-color:#253D46;background-image:var(--hero-image);background-size:cover;background-position:59% center}
+	.landing-hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,35,29,.68),rgba(24,35,29,.22) 65%,rgba(24,35,29,.08)),linear-gradient(0deg,rgba(20,31,26,.32),transparent 40%)}
+	.landing-hero-content{position:relative;margin:0 8%;width:min(100% - 16%,620px);padding:45px 0 85px}
+	.landing-hero-content .eyebrow{font-size:9px;letter-spacing:.19em;font-weight:600;color:#F5F0E6}.landing-hero-content .eyebrow span{display:inline-block;width:6px;height:6px;background:#D6BD95;border-radius:50%;margin-right:9px;vertical-align:1px}
+	.landing-hero h1{font:400 clamp(58px,12vw,88px)/.96 Georgia,'Times New Roman',serif;letter-spacing:-.045em;margin:24px 0 18px}.landing-hero h1 em{color:#D6BD95;font-weight:400}
+	.landing-hero-copy{font-size:14px;line-height:1.8;color:#F5F0E6;max-width:405px;margin:0}
+	.hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:17px;margin-top:27px}.button-light{background:#F5F0E6;color:#253D46}.hero-actions .btn{height:auto;min-height:0;border:0;border-radius:0;padding:14px 15px;gap:12px;font-size:10px;font-weight:400;letter-spacing:.04em;text-transform:none;transition:transform .2s}.hero-actions .btn:hover{transform:translateY(-2px)}
+	.text-link{color:white;text-decoration:none;font-size:10px}.text-link span{margin-left:8px}
+	.landing-hero-note,.landing-hero-index{position:absolute;bottom:28px;font-size:7px;letter-spacing:.17em;color:#F5F0E6}.landing-hero-note{left:8%;display:flex;align-items:center;gap:12px}.note-line{width:35px;height:1px;background:#D6BD95}.landing-hero-index{right:8%}.landing-hero-index span{opacity:.55;margin:0 7px}
+	@media(min-width:761px){.landing-hero{height:calc(100svh - 82px);min-height:min(710px,78vw);background-position:center 53%}.landing-hero-content{margin-left:12%;width:min(76%,760px);padding:60px 0}.landing-hero h1{font-size:clamp(62px,7.2vw,100px)}.landing-hero-copy{font-size:15px}.hero-actions{gap:27px}.hero-actions .btn{padding:15px 20px;gap:22px;font-size:11px}.text-link{font-size:11px}.landing-hero-note,.landing-hero-index{bottom:34px;font-size:8px}.landing-hero-note{left:7%}.landing-hero-index{right:7%}}
+	@media(max-width:390px){.hero-actions{gap:12px}.hero-actions .btn{padding:13px 12px;font-size:9px}.text-link{font-size:9px}}
+	@media(prefers-reduced-motion:reduce){.hero-actions .btn{transition:none}}
+</style>

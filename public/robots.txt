@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://posadaelnomada.com.ar/sitemap.xml
