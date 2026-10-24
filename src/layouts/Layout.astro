@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import Analytics from '@vercel/analytics/astro'
 import SEO from "../components/SEO.astro";
 ---
 
@@ -11,6 +12,7 @@ import SEO from "../components/SEO.astro";
 		<link rel="icon" type="image/webp" href="/images/isotipo.webp" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<SEO />
+		<Analytics />
 	</head>
 	<body>
 		<slot />
