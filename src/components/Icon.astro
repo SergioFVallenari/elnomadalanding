@@ -1,0 +1,28 @@
+---
+interface Props {
+	name: 'arrow-up-right' | 'arrow-down' | 'sparkles';
+	size?: number;
+	strokeWidth?: number;
+	class?: string;
+}
+
+const { name, size = 16, strokeWidth = 1.8, class: className } = Astro.props;
+---
+
+<svg
+	class={className}
+	width={size}
+	height={size}
+	viewBox="0 0 24 24"
+	fill="none"
+	stroke="currentColor"
+	stroke-width={strokeWidth}
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	aria-hidden="true"
+	focusable="false"
+>
+	{ name === 'arrow-up-right' && <><path d="M7 17 17 7" /><path d="M7 7h10v10" /></> }
+	{ name === 'arrow-down' && <><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></> }
+	{ name === 'sparkles' && <><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z" /><path d="m19 14 1.2 2.8L23 18l-2.8 1.2L19 22l-1.2-2.8L15 18l2.8-1.2L19 14Z" /></> }
+</svg>
