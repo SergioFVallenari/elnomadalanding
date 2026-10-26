@@ -1,0 +1,34 @@
+---
+import Gallery from './Gallery.astro';
+import Icon from './Icon.astro';
+import { site } from '../config/site';
+
+const photos = [
+	{ id: 1, alt: 'Habitación con cama de madera y cucheta', caption: 'Un lugar para descansar' },
+	{ id: 5, alt: 'Interior de la habitación con cama, cucheta y mesa', caption: 'Conocé las habitaciones' },
+	{ id: 7, alt: 'Baño con ducha, lavamanos y espejo', caption: 'Una mirada al interior' },
+	{ id: 4, alt: 'Frente de las habitaciones entre árboles', caption: 'Descanso entre árboles' },
+	{ id: 6, alt: 'Galería exterior frente a las habitaciones', caption: 'Aire de sierra' },
+	{ id: 3, alt: 'Vista del patio desde la galería con mesas de madera', caption: 'Espacios para hacer una pausa' },
+	{ id: 2, alt: 'Sector cubierto con parrillas y mesas de madera', caption: 'Rincones de nuestra posada' },
+];
+---
+
+<Gallery
+	id="habitaciones"
+	prefix="dormi"
+	label="Fotos de las habitaciones y sus alrededores"
+	eyebrow="NUESTRAS HABITACIONES"
+	intro="Después del camino, llega el descanso. Conocé las habitaciones y los espacios que las rodean, y consultá disponibilidad para las fechas de tu viaje."
+	tone="olive"
+	photos={photos}
+>
+	<Fragment slot="title">Tu lugar para<br /><em>bajar un cambio.</em></Fragment>
+	<div slot="footer" class="rooms-booking">
+		<a class="button button-dark" href={site.bookingUrl} target="_blank" rel="noreferrer">Ver disponibilidad <Icon name="arrow-up-right" size={16} /></a>
+	</div>
+</Gallery>
+
+<style>
+	.rooms-booking { margin-top: 32px; }
+</style>

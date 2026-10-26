@@ -1,11 +1,122 @@
-<section class="experience section-wrap" id="experiencia">
+---
+import Icon from './Icon.astro';
+
+interface Props {
+	id?: string;
+	photos?: { id: number; alt: string; caption: string }[];
+	prefix?: string;
+	label?: string;
+	eyebrow?: string;
+	intro?: string;
+	tone?: 'cream' | 'olive';
+}
+
+const {
+	id = 'galeria',
+	prefix = 'posada',
+	label = 'Fotos de la posada',
+	eyebrow = 'LA POSADA Y SU ENTORNO',
+	intro = 'Una mirada a los rincones de El Nómada y a los paisajes que nos rodean. Empezá a imaginar tu próxima parada.',
+	tone = 'cream',
+	photos = [
+	{ id: 3, alt: 'Montañas y paisajes serranos', caption: 'Paisajes que invitan a quedarse' },
+	{ id: 4, alt: 'Interior cálido de una cabaña', caption: 'Un espacio para descansar' },
+	{ id: 1, alt: 'Cartel de Posada El Nómada entre los árboles', caption: 'Posada El Nómada' },
+	{ id: 5, alt: 'Otro rincón de Posada El Nómada', caption: 'Un rincón para disfrutar' },
+	{ id: 6, alt: 'Espacios de Posada El Nómada', caption: 'Tu próxima parada' },
+	{ id: 2, alt: 'Vista de Posada El Nómada', caption: 'Tu parada en el camino' },
+	{ id: 7, alt: 'Fotografía de Posada El Nómada', caption: 'Momentos para guardar' },
+	{ id: 8, alt: 'Otro espacio de Posada El Nómada', caption: 'Conocé El Nómada' },
+],
+} = Astro.props;
+
+const trackId = `${id}-track`;
+---
+
+<section class:list={['experience', 'section-wrap', { 'gallery-olive': tone === 'olive' }]} id={id} aria-labelledby={`${id}-title`}>
 			<div class="experience-heading">
-				<div><p class="eyebrow">SALÍ A EXPLORAR</p><h2>Disfrutá las sierras<br /> de <em> Córdoba.</em></h2></div>
-				<p class="experience-intro">A veces, lo mejor del viaje es lo que pasa cuando llegás. Naturaleza, caminos y momentos para guardar en la memoria.</p>
+				<div><p class="eyebrow">{eyebrow}</p><h2 id={`${id}-title`}><slot name="title">Conocé tu<br /><em>próxima parada.</em></slot></h2></div>
+				<p class="experience-intro">{intro}</p>
 			</div>
-			<div class="photo-grid">
-				<figure class="photo photo-tall"><img src="/images/entorno.webp" alt="Montañas y paisajes serranos" loading="lazy" /><figcaption><span>01</span> Paisajes que invitan a quedarse</figcaption></figure>
-				<figure class="photo photo-short"><img src="/images/interior.webp" alt="Interior cálido de una cabaña" loading="lazy" /><figcaption><span>02</span> Un espacio para descansar</figcaption></figure>
-				<figure class="photo photo-sign"><img src="/images/cartel-posada.webp" alt="Cartel de Posada El Nómada entre los árboles" loading="lazy" /><figcaption><span>03</span> Posada El Nómada</figcaption></figure>
-			</div>
+			<photo-carousel role="region" aria-roledescription="carrusel" aria-label={label}>
+				<div class="carousel gallery-track" id={trackId} tabindex="0" aria-label={`${label}: deslizá o usá las flechas del teclado`}>
+					{photos.map((photo, index) => (
+						<figure class="carousel-item photo gallery-slide" role="group" aria-roledescription="diapositiva" aria-label={`${index + 1} de ${photos.length}`}>
+							<img src={`/images/${prefix}${photo.id}.webp`} alt={photo.alt} loading="lazy" decoding="async" />
+							<figcaption><span>{String(index + 1).padStart(2, '0')}</span>{photo.caption}</figcaption>
+						</figure>
+					))}
+				</div>
+				<div class="gallery-controls" hidden>
+					<p class="gallery-count"><span data-current>01</span><span aria-hidden="true"> / </span><span>{String(photos.length).padStart(2, '0')}</span></p>
+					<div class="gallery-arrows">
+						<button type="button" data-direction="-1" aria-label="Foto anterior" aria-controls={trackId} disabled><Icon name="arrow-up-right" size={20} /></button>
+						<button type="button" data-direction="1" aria-label="Foto siguiente" aria-controls={trackId}><Icon name="arrow-up-right" size={20} /></button>
+					</div>
+				</div>
+			</photo-carousel>
+			<slot name="footer" />
 		</section>
+
+<script>
+	class PhotoCarousel extends HTMLElement {
+		connectedCallback() {
+			const track = this.querySelector<HTMLElement>('.gallery-track')!;
+			const slides = Array.from(track.querySelectorAll<HTMLElement>('.gallery-slide'));
+			const buttons = this.querySelectorAll<HTMLButtonElement>('[data-direction]');
+			const counter = this.querySelector<HTMLElement>('[data-current]')!;
+			this.querySelector<HTMLElement>('.gallery-controls')!.hidden = false;
+			let current = -1;
+			const update = () => {
+				const left = track.getBoundingClientRect().left;
+				const next = slides.reduce((nearest, slide, index) =>
+					Math.abs(slide.getBoundingClientRect().left - left) < Math.abs(slides[nearest].getBoundingClientRect().left - left) ? index : nearest, 0);
+				if (next === current) return;
+				current = next;
+				counter.textContent = String(current + 1).padStart(2, '0');
+				buttons.forEach(button => {
+					button.disabled = Number(button.dataset.direction) < 0 ? current === 0 : current === slides.length - 1;
+				});
+			};
+			const move = (direction: number) => {
+				const next = Math.max(0, Math.min(slides.length - 1, current + direction));
+				track.scrollTo({ left: track.scrollLeft + slides[next].getBoundingClientRect().left - track.getBoundingClientRect().left, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+			};
+			buttons.forEach(button => button.addEventListener('click', () => move(Number(button.dataset.direction))));
+			track.addEventListener('scroll', update, { passive: true });
+			track.addEventListener('keydown', event => {
+				if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+					event.preventDefault();
+					move(event.key === 'ArrowLeft' ? -1 : 1);
+				}
+			});
+			update();
+		}
+	}
+	if (!customElements.get('photo-carousel')) customElements.define('photo-carousel', PhotoCarousel);
+</script>
+
+<style>
+	.gallery-olive { background: var(--color-olive); }
+	photo-carousel { display: block; min-width: 0; }
+	.gallery-track { display: flex; gap: 20px; width: 100%; border-radius: var(--radius-card); scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+	.gallery-slide { flex: 0 0 85%; height: clamp(320px, 43vw, 560px); scroll-snap-align: start; scroll-snap-stop: always; box-shadow: none; }
+	.gallery-slide:last-child { flex-basis: 100%; }
+	.gallery-controls { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
+	.gallery-controls[hidden] { display: none; }
+	.gallery-count { display: flex; gap: 12px; margin: 0; color: var(--color-forest); font-size: 13px; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
+	.gallery-count [data-current] { font-weight: 700; }
+	.gallery-arrows { display: flex; gap: 10px; }
+	.gallery-arrows button { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid #253d4640; border-radius: 50%; color: var(--color-forest); background: transparent; cursor: pointer; transition: background .2s, color .2s; }
+	.gallery-arrows button:not(:disabled):hover { background: var(--color-forest); color: var(--color-cream); }
+	.gallery-arrows button:disabled { opacity: .3; cursor: default; }
+	.gallery-arrows button:first-child :global(svg) { transform: rotate(-135deg); }
+	.gallery-arrows button:last-child :global(svg) { transform: rotate(45deg); }
+	@media(max-width:540px) {
+		.gallery-track { gap: 12px; }
+		.gallery-slide { flex-basis: 92%; height: 360px; }
+	}
+	@media(prefers-reduced-motion:reduce) {
+		.gallery-arrows button { transition: none; }
+	}
+</style>
