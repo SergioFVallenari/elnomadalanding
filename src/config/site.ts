@@ -2,7 +2,8 @@ export const site = {
   name: 'Posada El Nómada',
   location: 'La Serranita, Córdoba, Argentina',
   bookingUrl: 'https://reservas.posadaelnomada.com.ar/disponibilidad/posada-el-nomada',
-  whatsappNumber: '', // Falta el número
+  whatsappNumber: '5493518007211',
+  instagramUrl: 'https://www.instagram.com/alojamientoelnomada/',
   whatsappMessage:
     '¡Hola! Quería consultar por disponibilidad en Posada El Nómada.',
   mapsUrl: 'https://maps.app.goo.gl/7RsX3vjwWFSwSGLi7',
